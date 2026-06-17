@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<title>A Birthday Surprise 🎉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#FF8FB1;
+    --pink-deep:#FF6F9C;
+    --peri:#8B9DFF;
+    --mint:#7EE8C2;
+    --sun:#FFD66B;
+    --plum:#4A3B6B;
+    --cream:#FFF6FB;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:'Quicksand',system-ui,-apple-system,sans-serif;
+    color:var(--plum);
+    overflow:hidden;
+    position:relative;
+    min-height:100dvh;
+    overscroll-behavior:none;
+    touch-action:manipulation;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+    background:linear-gradient(160deg,#FBE6FF 0%,#E7ECFF 38%,#E0FBF2 72%,#FFF1E0 100%);
+  }
+  /* dreamy drifting blobs */
+  .blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.55;z-index:0;animation:drift 18s ease-in-out infinite;}
+  .blob.b1{width:46vmin;height:46vmin;background:var(--pink);top:-10vmin;left:-8vmin;}
+  .blob.b2{width:40vmin;height:40vmin;background:var(--peri);bottom:-12vmin;right:-6vmin;animation-delay:-6s;}
+  .blob.b3{width:34vmin;height:34vmin;background:var(--mint);top:40%;right:30%;animation-delay:-11s;}
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(6vmin,-4vmin) scale(1.08)}66%{transform:translate(-5vmin,5vmin) scale(.94)}}
+
+  #bgfx{position:fixed;inset:0;z-index:2;pointer-events:none;}
+  #confetti{position:fixed;inset:0;z-index:40;pointer-events:none;}
+  #balloons{position:fixed;inset:0;z-index:30;pointer-events:none;overflow:hidden;}
+  #ambient{position:fixed;inset:0;z-index:5;pointer-events:none;overflow:hidden;}
+
+  .scene{position:relative;z-index:20;height:100%;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px;
+    padding-top:max(24px,env(safe-area-inset-top));padding-bottom:max(24px,env(safe-area-inset-bottom));}
+  .stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px;text-align:center;
+    opacity:0;transform:scale(.96);pointer-events:none;transition:opacity .7s ease,transform .7s cubic-bezier(.18,.9,.3,1.2);}
+  .stage.show{opacity:1;transform:scale(1);pointer-events:auto;}
+
+  .eyebrow{font-family:'Quicksand',system-ui,sans-serif;font-weight:700;letter-spacing:.28em;text-transform:uppercase;font-size:clamp(11px,2.6vw,14px);color:var(--pink-deep);opacity:.85;}
+  .big{font-family:'Fredoka','Quicksand',system-ui,sans-serif;font-weight:700;line-height:.98;font-size:clamp(40px,12vw,104px);
+    background:linear-gradient(95deg,var(--pink-deep),var(--peri) 60%,var(--mint));-webkit-background-clip:text;background-clip:text;
+    color:var(--pink-deep);-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 6px 0 rgba(255,143,177,.18));}
+  .sub{font-weight:600;font-size:clamp(15px,4vw,20px);max-width:34ch;line-height:1.5;color:var(--plum);opacity:.92;}
+  .hint{font-weight:600;font-size:clamp(13px,3.4vw,16px);color:var(--peri);opacity:.9;}
+
+  /* ---------- GIFT ---------- */
+  .gift-wrap{cursor:pointer;border:none;background:none;outline-offset:8px;animation:bob 2.6s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-14px) rotate(1.5deg)}}
+  .gift{position:relative;width:clamp(150px,42vw,210px);height:clamp(135px,38vw,190px);}
+  .gift .box{position:absolute;bottom:0;width:100%;height:74%;border-radius:14px;
+    background:linear-gradient(135deg,var(--peri),#6F84FF);box-shadow:0 18px 36px rgba(75,59,107,.28),inset 0 -14px 0 rgba(0,0,0,.08);}
+  .gift .box::after{content:"";position:absolute;left:42%;top:0;width:16%;height:100%;background:linear-gradient(var(--sun),#FFC93F);}
+  .gift .lid{position:absolute;top:14%;left:-6%;width:112%;height:26%;border-radius:12px;
+    background:linear-gradient(135deg,var(--pink),var(--pink-deep));box-shadow:0 10px 20px rgba(75,59,107,.25),inset 0 -8px 0 rgba(0,0,0,.07);
+    transition:transform 1s cubic-bezier(.3,1.4,.4,1),opacity 1s ease;z-index:3;}
+  .gift .lid::after{content:"";position:absolute;left:42%;top:0;width:16%;height:100%;background:linear-gradient(var(--sun),#FFC93F);}
+  .gift .bow{position:absolute;top:-9%;left:50%;transform:translateX(-50%);width:64px;height:46px;z-index:4;transition:transform 1s ease,opacity 1s ease;}
+  .gift .bow span{position:absolute;top:6px;width:30px;height:34px;border-radius:50% 50% 50% 50%/70% 70% 30% 30%;background:radial-gradient(circle at 40% 35%,#FFB4CF,var(--pink-deep));}
+  .gift .bow .l{left:-2px;transform:rotate(-32deg);}
+  .gift .bow .r{right:-2px;transform:rotate(32deg);}
+  .gift .bow .knot{left:50%;top:10px;width:18px;height:18px;border-radius:50%;transform:translateX(-50%);background:radial-gradient(circle at 40% 35%,#FFC2D8,var(--pink-deep));}
+  .opening .lid{transform:translateY(-150px) rotate(-18deg);opacity:0;}
+  .opening .bow{transform:translate(-50%,-180px) rotate(40deg) scale(.6);opacity:0;}
+
+  /* ---------- CAKE ---------- */
+  .cake{position:relative;width:clamp(210px,60vw,300px);height:clamp(180px,52vw,250px);}
+  .plate{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:108%;height:26px;border-radius:50%;
+    background:linear-gradient(#fff,#E7ECFF);box-shadow:0 14px 26px rgba(75,59,107,.22);}
+  .tier{position:absolute;left:50%;transform:translateX(-50%);border-radius:18px;}
+  .tier.bottom{bottom:18px;width:100%;height:42%;background:linear-gradient(var(--pink),#FF7FA6);box-shadow:inset 0 -12px 0 rgba(0,0,0,.06);}
+  .tier.top{bottom:calc(18px + 38%);width:72%;height:34%;background:linear-gradient(var(--peri),#7488FF);box-shadow:inset 0 -10px 0 rgba(0,0,0,.07);}
+  .frosting{position:absolute;left:0;right:0;top:-12px;height:24px;background:
+     radial-gradient(circle at 10% 0,#fff 6px,transparent 7px) 0 0/22px 24px repeat-x;filter:drop-shadow(0 4px 0 rgba(255,255,255,.5));}
+  .tier.bottom .frosting{top:-13px;}
+  .drip{position:absolute;top:-2px;left:0;right:0;height:18px;background:
+    radial-gradient(circle at 50% 0,var(--cream) 8px,transparent 9px) 0 0/26px 20px repeat-x;}
+  .sprinkle{position:absolute;width:9px;height:4px;border-radius:3px;}
+  #icing{position:absolute;inset:0;border-radius:18px;z-index:3;touch-action:none;cursor:crosshair;}
+  .candle{position:absolute;bottom:calc(18px + 70%);left:50%;width:11px;height:42px;border-radius:4px;cursor:pointer;
+    background:repeating-linear-gradient(45deg,#fff 0 6px,var(--pink-deep) 6px 12px);box-shadow:0 4px 6px rgba(75,59,107,.18);}
+  .candle::before{content:"";position:absolute;inset:-26px -12px -6px;}  /* bigger tap target incl. the flame */
+  .wick{position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:2px;height:6px;background:#3a2c4a;}
+  .flame{position:absolute;top:-22px;left:50%;transform:translateX(-50%);width:14px;height:22px;
+    background:radial-gradient(circle at 50% 75%,#fff 0 2px,var(--sun) 3px 7px,var(--pink-deep) 12px,transparent);
+    border-radius:50% 50% 50% 50%/65% 65% 40% 40%;transform-origin:50% 90%;
+    animation:flick .28s ease-in-out infinite alternate;box-shadow:0 0 22px 6px rgba(255,196,90,.55);transition:opacity .25s ease,transform .25s ease;}
+  @keyframes flick{from{transform:translateX(-50%) scaleY(.92) rotate(-3deg)}to{transform:translateX(-50%) scaleY(1.08) rotate(3deg)}}
+  .candle.out .flame{opacity:0;transform:translateX(-50%) scaleY(.2);box-shadow:none;}
+  .smoke{position:absolute;top:-20px;left:50%;width:6px;height:6px;border-radius:50%;background:rgba(150,150,160,.5);opacity:0;}
+  .candle.out .smoke{animation:smoke 1.1s ease-out forwards;}
+  @keyframes smoke{0%{opacity:.6;transform:translate(-50%,0) scale(.6)}100%{opacity:0;transform:translate(-30%,-40px) scale(2)}}
+
+  /* buttons */
+  .btn{font-family:'Fredoka','Quicksand',system-ui,sans-serif;font-weight:600;font-size:clamp(15px,4vw,18px);color:#fff;border:none;cursor:pointer;
+    padding:14px 26px;border-radius:999px;background:linear-gradient(95deg,var(--pink-deep),var(--peri));
+    box-shadow:0 10px 22px rgba(139,157,255,.4);transition:transform .15s ease,box-shadow .15s ease;}
+  .btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 14px 28px rgba(139,157,255,.5);}
+  .btn:active{transform:translateY(0) scale(.98);}
+  .btn,.gift-wrap,.kitty.play{touch-action:manipulation;}
+  .btn.ghost{background:#fff;color:var(--pink-deep);box-shadow:0 8px 18px rgba(75,59,107,.14);}
+  .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+  .mic-state{font-weight:600;font-size:13px;color:var(--peri);min-height:18px;}
+
+  /* message card */
+  .card{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.7);
+    border-radius:28px;padding:clamp(24px,5vw,40px);max-width:560px;box-shadow:0 24px 60px rgba(75,59,107,.18);}
+  .note{font-weight:600;font-size:clamp(15px,3.8vw,19px);line-height:1.6;margin-top:14px;color:var(--plum);opacity:.95;}
+  .from{margin-top:18px;font-family:'Fredoka','Quicksand',system-ui,sans-serif;font-weight:500;color:var(--peri);font-size:clamp(14px,3.6vw,17px);}
+
+  *:focus-visible{outline:3px solid var(--peri);outline-offset:4px;border-radius:14px;}
+
+  /* balloons + floaties via pure CSS (no Web Animations API) */
+  .balloon{position:absolute;bottom:-150px;animation:rise var(--dur,11s) ease-in forwards;}
+  .balloon .body{width:100%;height:100%;border-radius:50% 50% 50% 50%/45% 45% 55% 55%;
+    background:radial-gradient(circle at 35% 30%,#ffffffcc,var(--bc,#FF8FB1));box-shadow:inset -6px -8px 12px rgba(0,0,0,.08);}
+  .balloon .string{position:absolute;left:50%;top:100%;width:1px;height:70px;background:rgba(75,59,107,.3);transform:translateX(-50%);}
+  @keyframes rise{to{transform:translateY(calc(-100vh - 320px)) translateX(var(--dx,0px));}}
+
+  .floaty{position:absolute;bottom:-40px;will-change:transform,opacity;animation:floatUp var(--dur,12s) ease-out forwards;}
+  @keyframes floatUp{
+    0%{transform:translateY(0) rotate(0);opacity:0;}
+    12%{opacity:.95;}
+    100%{transform:translateY(calc(-100vh - 90px)) rotate(var(--rot,40deg));opacity:0;}
+  }
+
+  /* kitties (SVG stickers) */
+  #kitties{position:fixed;inset:0;z-index:35;pointer-events:none;overflow:hidden;}
+  .kitty{position:absolute;width:clamp(50px,12vw,72px);height:clamp(50px,12vw,72px);transform:translate(-50%,-50%);
+    opacity:0;transition:left 1s cubic-bezier(.45,.05,.3,1), top 1.05s cubic-bezier(.4,-0.2,.35,1), opacity .45s ease;
+    filter:drop-shadow(0 5px 7px rgba(75,59,107,.3));will-change:left,top,opacity;
+    user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;}
+  .kitty .face{display:block;width:100%;height:100%;animation:kbob .5s ease-in-out infinite alternate;}
+  .kitty .face svg{display:block;width:100%;height:100%;overflow:visible;}
+  @keyframes kbob{from{transform:translateY(0) rotate(-7deg)}to{transform:translateY(-5px) rotate(7deg)}}
+  .kitty .puff{position:absolute;left:50%;top:-2px;transform:translate(-50%,-50%);font-size:24px;opacity:0;}
+  .kitty .puff.go{animation:puff .7s ease-out forwards;}
+  @keyframes puff{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}30%{opacity:.95}100%{opacity:0;transform:translate(-50%,-150%) scale(1.5)}}
+  .kitty.bye{opacity:0;transition:opacity .6s ease, top .8s ease;}
+  .kitty.play{pointer-events:auto;cursor:pointer;}
+  .kitty.boing .face{animation:boing .4s ease;}
+  @keyframes boing{0%{transform:scale(1)}30%{transform:scale(1.28) rotate(-7deg)}60%{transform:scale(.9) rotate(4deg)}100%{transform:scale(1)}}
+  .kitty.rspin .face{animation:rspin .6s ease;}
+  @keyframes rspin{0%{transform:rotate(0) scale(1)}50%{transform:rotate(180deg) scale(1.12)}100%{transform:rotate(360deg) scale(1)}}
+  .kitty.rwobble .face{animation:rwobble .6s ease;}
+  @keyframes rwobble{0%,100%{transform:rotate(0)}20%{transform:rotate(-18deg)}55%{transform:rotate(15deg)}80%{transform:rotate(-6deg)}}
+  .kitty.rhop .face{animation:rhop .52s ease;}
+  @keyframes rhop{0%,100%{transform:translateY(0)}38%{transform:translateY(-22px) scale(1.05)}}
+  .kitty.rflip .face{animation:rflip .55s ease;}
+  @keyframes rflip{0%{transform:scaleX(1)}50%{transform:scaleX(-1) scale(1.08)}100%{transform:scaleX(1)}}
+  .kitty.rwiggle .face{animation:rwiggle .55s ease;}
+  @keyframes rwiggle{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px) rotate(-6deg)}50%{transform:translateX(7px) rotate(6deg)}80%{transform:translateX(-3px)}}
+  .kitty.emerge .face{animation:emerge .5s cubic-bezier(.2,1.4,.4,1);}
+  @keyframes emerge{0%{transform:scale(0) rotate(-20deg)}65%{transform:scale(1.2) rotate(8deg)}100%{transform:scale(1)}}
+  .kitty.purr .eo{display:none;}
+  .kitty.purr .eh{display:block;}
+  .kitty.startled .face{animation:startle .55s ease;}
+  @keyframes startle{0%{transform:translateY(0) rotate(0)}20%{transform:translateY(-14px) rotate(-10deg)}45%{transform:translateY(0) rotate(8deg)}70%{transform:translateY(-6px) rotate(-4deg)}100%{transform:translateY(0)}}
+  .kitty.golden{filter:drop-shadow(0 0 9px rgba(255,200,60,.85)) drop-shadow(0 5px 7px rgba(75,59,107,.3));}
+  .kitty .spk path{animation:twinkle 1.3s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
+  .kitty .spk path:nth-child(2){animation-delay:.32s}
+  .kitty .spk path:nth-child(3){animation-delay:.64s}
+  .kitty .spk path:nth-child(4){animation-delay:.96s}
+  @keyframes twinkle{0%,100%{opacity:.35}50%{opacity:1}}
+
+  /* secrets scoreboard */
+  .board{margin-top:12px;display:inline-flex;align-items:center;gap:8px;font-family:'Quicksand',system-ui,sans-serif;font-weight:700;
+    color:var(--plum);background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    padding:7px 14px;border-radius:999px;box-shadow:0 6px 16px rgba(75,59,107,.12);}
+  .board .blab{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--pink-deep);}
+  .board .ic{font-size:18px;filter:grayscale(1);opacity:.32;transition:transform .35s cubic-bezier(.2,1.5,.4,1),opacity .35s,filter .35s;}
+  .board .ic.on{filter:none;opacity:1;transform:scale(1.18);}
+  .board .cnt{font-size:13px;color:var(--plum);min-width:30px;text-align:right;}
+
+  /* grand finale: heart → infinity → matrix */
+  #finale{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;overflow:hidden;
+    background:rgba(6,3,12,0);transition:background .9s ease;}
+  .bigheart{width:42vmin;height:42vmin;animation:heartbeat .9s ease-in-out infinite;
+    filter:drop-shadow(0 0 34px rgba(255,90,150,.85));}
+  @keyframes heartbeat{0%,100%{transform:scale(1)}22%{transform:scale(1.2)}38%{transform:scale(1)}58%{transform:scale(1.12)}}
+  .bigheart.toInfinity{animation:toInf 1.3s cubic-bezier(.6,0,.9,.4) forwards;}
+  @keyframes toInf{0%{transform:scale(1) rotate(0);opacity:1}70%{transform:scale(.06) rotate(220deg);opacity:1}100%{transform:scale(0) rotate(540deg);opacity:0}}
+  #finale .inf{position:absolute;left:50%;top:50%;font-family:'Fredoka','Quicksand',sans-serif;font-weight:700;font-size:18vmin;color:#fff;
+    opacity:0;text-shadow:0 0 30px rgba(255,120,170,.9);transform:translate(-50%,-50%) scale(.2);}
+  #finale .inf.show{animation:infPop 1.1s ease forwards;}
+  @keyframes infPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}30%{opacity:1;transform:translate(-50%,-50%) scale(1)}75%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.4)}}
+  #finale .ytwrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;border-radius:14px;overflow:hidden;
+    box-shadow:0 12px 34px rgba(0,0,0,.55);border:2px solid rgba(57,255,119,.5);opacity:0;animation:mIn 1s ease .3s forwards;}
+  #finale .ytwrap iframe{display:block;width:min(88vw,400px);height:152px;border:0;border-radius:12px;}
+  #finale .ytlink{position:absolute;left:50%;top:calc(50% + 76px + 14px);transform:translateX(-50%);z-index:3;
+    color:#9dffb0;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;text-decoration:none;
+    border:1px solid rgba(57,255,119,.5);padding:6px 14px;border-radius:999px;background:rgba(0,0,0,.3);
+    opacity:0;animation:mIn 1s ease 1s forwards;}
+  #finale .mtext{position:absolute;left:50%;top:14%;transform:translateX(-50%);z-index:3;font-family:'Fredoka','Quicksand',monospace;font-weight:700;color:#9dffb0;
+    font-size:clamp(18px,4.6vw,36px);text-shadow:0 0 14px rgba(57,255,119,.9);opacity:0;text-align:center;padding:0 16px;line-height:1.25;}
+  #finale .mtext.show{animation:mIn 1.4s ease forwards;}
+  @keyframes mIn{0%{opacity:0}100%{opacity:1}}
+  #finale .again{position:absolute;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:3;
+    border:1px solid rgba(57,255,119,.6);background:rgba(0,0,0,.35);cursor:pointer;padding:8px 18px;border-radius:999px;
+    color:#9dffb0;font-family:'Quicksand',sans-serif;font-weight:600;font-size:13px;opacity:0;animation:mIn 1s ease 2.4s forwards;}
+  .musicbtn{position:fixed;top:calc(10px + env(safe-area-inset-top));right:10px;z-index:60;border:none;cursor:pointer;
+    width:42px;height:42px;border-radius:50%;font-size:18px;line-height:1;background:rgba(255,255,255,.7);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 4px 12px rgba(75,59,107,.18);}
+
+
+
+  @media (prefers-reduced-motion: reduce){
+    .blob{animation:none;}
+    .gift-wrap{animation:none;}
+    .kitty .face{animation:none;}        /* stop the idle bob loop only */
+    .kitty .spk path{animation:none;opacity:.85;}
+    .flame{animation:none;}
+  }
+  @media (max-height:540px){
+    .stage{gap:10px;}
+    .big{font-size:clamp(28px,9vw,56px);}
+    .cake{width:clamp(150px,34vw,210px);height:clamp(128px,30vw,180px);}
+    .gift{width:clamp(110px,26vw,150px);height:clamp(100px,24vw,135px);}
+    .card{padding:16px 20px;}
+    .note{font-size:clamp(13px,3.4vw,16px);}
+  }
+</style>
+</head>
+<body>
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <canvas id="bgfx"></canvas>
+  <div id="ambient"></div>
+  <div id="balloons"></div>
+  <div id="kitties"></div>
+  <canvas id="confetti"></canvas>
+  <button id="musicBtn" class="musicbtn" aria-label="toggle music">🔊</button>
+
+  <div class="scene">
+    <!-- STAGE 1: GIFT -->
+    <section class="stage show" id="s-gift">
+      <p class="eyebrow">a little surprise 🎀</p>
+      <h1 class="big" id="gift-name">Happy Birthday to mew!</h1>
+      <p class="hint" style="margin-top:-6px">(yes… you 🐱)</p>
+      <button class="gift-wrap" id="giftBtn" aria-label="Open your gift">
+        <div class="gift" id="giftArt">
+          <div class="box"></div>
+          <div class="lid"></div>
+          <div class="bow"><span class="l"></span><span class="r"></span><span class="knot"></span></div>
+        </div>
+      </button>
+      <p class="hint">tap the gift to open it ✨</p>
+    </section>
+
+    <!-- STAGE 2: CAKE -->
+    <section class="stage" id="s-cake">
+      <p class="eyebrow">make a wish,</p>
+      <h2 class="big" style="font-size:clamp(34px,9vw,68px)" id="cake-name">Moo</h2>
+      <div class="cake" id="cakeArt">
+        <div class="tier top"><div class="frosting"></div></div>
+        <div class="tier bottom"><div class="frosting"></div></div>
+        <div class="plate"></div>
+      </div>
+      <p class="hint" id="cakeHint">make a wish — tap when ready 🐾</p>
+      <div class="row">
+        <button class="btn" id="blowBtn">🐾 tap to make a wish</button>
+      </div>
+    </section>
+
+    <!-- STAGE 3: MESSAGE -->
+    <section class="stage" id="s-msg">
+      <div class="card">
+        <p class="eyebrow">your wish is sealed 💫</p>
+        <h1 class="big" id="msg-name">Happy Birthday!</h1>
+        <p class="note" id="msg-note">Love you berry much — wishing you all the best today! 🍓🎉</p>
+        <p class="from" id="msg-from"></p>
+      </div>
+      <div class="row">
+        <button class="btn" id="moreConfetti">more confetti 🎉</button>
+        <button class="btn ghost" id="replay">wish again ↺</button>
+      </div>
+      <p class="hint" style="margin-top:4px">psst… can you find all the secrets? 🤫🐾</p>
+      <div id="board" class="board" aria-label="secrets found"></div>
+    </section>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  // surface any runtime error visibly so it can be diagnosed
+  function reportError(msg){
+    let t=document.getElementById('errtoast');
+    if(!t){ t=document.createElement('div'); t.id='errtoast';
+      t.style.cssText='position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:9999;background:#4A3B6B;color:#fff;'+
+        'font:600 12px/1.4 system-ui,sans-serif;padding:10px 14px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);'+
+        'max-height:40vh;overflow:auto;white-space:pre-wrap;';
+      document.body.appendChild(t); }
+    t.textContent='⚠️ '+msg;
+  }
+  window.addEventListener('error', function(ev){
+    // ignore resource load failures (fonts, images, the YouTube embed, etc.) — these are not page errors
+    if(ev && ev.target && ev.target !== window && ev.target.tagName) return;
+    reportError((ev.message||'error')+(ev.lineno?(' @'+ev.lineno+':'+ev.colno):''));
+  }, true);
+  window.addEventListener('unhandledrejection', function(ev){
+    reportError('promise: '+((ev.reason&&(ev.reason.message||ev.reason))||'rejected'));
+  });
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const params = new URLSearchParams(location.search);
+  const NAME = (params.get('to') || 'Moo').slice(0,40);
+  const FROM = (params.get('from') || '').slice(0,40);
+  const COLORS = ['#FF8FB1','#8B9DFF','#7EE8C2','#FFD66B','#FF6F9C','#ffffff'];
+
+  document.getElementById('msg-name').textContent = 'Happy Birthday, ' + NAME + '!';
+  document.getElementById('msg-from').textContent = FROM ? ('— with love, ' + FROM) : '';
+
+  /* ---------------- Confetti engine ---------------- */
+  const cv = document.getElementById('confetti'), ctx = cv.getContext('2d');
+  const bgcv = document.getElementById('bgfx'), bgctx = bgcv.getContext('2d');
+  let W,H,dpr; let parts = []; let bgParts = [];
+  function resize(){
+    dpr = Math.min(devicePixelRatio||1,2);
+    W=cv.width=innerWidth*dpr; H=cv.height=innerHeight*dpr; cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px';
+    bgcv.width=innerWidth*dpr; bgcv.height=innerHeight*dpr; bgcv.style.width=innerWidth+'px'; bgcv.style.height=innerHeight+'px';
+  }
+  resize(); addEventListener('resize', resize);
+  function burst(x,y,n){
+    if(reduce) n = Math.min(n,30);
+    for(let i=0;i<n;i++){
+      const a=Math.random()*Math.PI*2, sp=(4+Math.random()*9)*dpr;
+      parts.push({x:x*dpr,y:y*dpr,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-6*dpr,
+        g:0.18*dpr+Math.random()*0.12*dpr, s:(6+Math.random()*7)*dpr, c:COLORS[Math.random()*COLORS.length|0],
+        rot:Math.random()*6.28, vr:(Math.random()-.5)*0.3, life:1, sq:Math.random()<.5});
+    }
+  }
+  function firework(x,y){
+    const n = reduce?14:30;
+    const col = COLORS[Math.random()*5|0]; // one cohesive saturated color per pop
+    for(let i=0;i<n;i++){
+      const a=(Math.PI*2*i/n)+Math.random()*0.25, sp=(2.6+Math.random()*5)*dpr;
+      parts.push({x:x*dpr,y:y*dpr,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+        g:0.05*dpr, s:(3.4+Math.random()*3)*dpr, c:col,
+        rot:0, vr:0, life:1, fade:0.016+Math.random()*0.012, drag:0.91, fw:true});
+    }
+    // bright central flash in the same hue
+    parts.push({x:x*dpr,y:y*dpr,vx:0,vy:0,g:0,s:11*dpr,c:col,rot:0,vr:0,life:1,fade:0.08,drag:1,fw:true});
+  }
+  function shower(){ const x=Math.random()*innerWidth; burst(x,-10,1); }
+  function shootingStar(){
+    const sx=innerWidth*(0.04+Math.random()*0.42), sy=innerHeight*(0.03+Math.random()*0.16);
+    const ang=(22+Math.random()*22)*Math.PI/180, sp=(10.5+Math.random()*4)*dpr;  // a touch slower
+    parts.push({star:true, x:sx*dpr, y:sy*dpr, vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp,
+      tail:(95+Math.random()*50)*dpr, life:1.4});
+  }
+  let running=true;
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=parts.length-1;i>=0;i--){
+      const p=parts[i];
+      if(p.star){                       // shooting star: a glowing head with a fading tail
+        p.x+=p.vx; p.y+=p.vy; p.life-=0.014;
+        if(p.life<=0||p.x>W+60||p.y>H+60){ parts.splice(i,1); continue; }
+        const mag=Math.hypot(p.vx,p.vy)||1, tx=p.x-p.vx/mag*p.tail, ty=p.y-p.vy/mag*p.tail;
+        const grad=ctx.createLinearGradient(p.x,p.y,tx,ty);
+        const a=Math.max(p.life,0);
+        grad.addColorStop(0,'rgba(255,248,214,'+a+')'); grad.addColorStop(1,'rgba(255,248,214,0)');
+        ctx.save();
+        ctx.strokeStyle=grad; ctx.lineWidth=4*dpr; ctx.lineCap='round';
+        ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(tx,ty); ctx.stroke();
+        ctx.fillStyle='#fff'; ctx.shadowBlur=20*dpr; ctx.shadowColor='#FFE6A0';
+        ctx.beginPath(); ctx.arc(p.x,p.y,4.4*dpr,0,6.28); ctx.fill();
+        ctx.restore();
+        continue;
+      }
+      p.vy+=p.g; p.x+=p.vx; p.y+=p.vy;
+      const dr=p.drag||0.99; p.vx*=dr; p.vy*=dr;
+      p.rot+=p.vr; p.life-=(p.fade||0.006);
+      if(p.y>H+40||p.life<=0){parts.splice(i,1);continue;}
+      ctx.save(); ctx.translate(p.x,p.y); ctx.globalAlpha=Math.max(p.life,0); ctx.fillStyle=p.c;
+      if(p.fw){
+        ctx.shadowBlur=9*dpr; ctx.shadowColor=p.c;
+        ctx.beginPath(); ctx.arc(0,0,p.s*Math.max(p.life,0.25),0,6.28); ctx.fill();
+      } else {
+        ctx.rotate(p.rot);
+        if(p.sq) ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6);
+        else {ctx.beginPath();ctx.arc(0,0,p.s/2,0,6.28);ctx.fill();}
+      }
+      ctx.restore();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  /* ---------------- Background fireworks (rockets) ---------------- */
+  function bgTick(){
+    bgctx.clearRect(0,0,bgcv.width,bgcv.height);
+    for(let i=bgParts.length-1;i>=0;i--){
+      const p=bgParts[i];
+      p.vy+=p.g; p.x+=p.vx; p.y+=p.vy;
+      const dr=p.drag||0.98; p.vx*=dr; p.vy*=dr;
+      p.life-=(p.fade||0.012);
+      if(p.life<=0||p.y>bgcv.height+40){ bgParts.splice(i,1); continue; }
+      bgctx.save(); bgctx.globalAlpha=Math.max(p.life,0); bgctx.fillStyle=p.c;
+      bgctx.shadowBlur=10*dpr; bgctx.shadowColor=p.c;
+      bgctx.beginPath(); bgctx.arc(p.x,p.y,p.s*Math.max(p.life,0.25),0,6.28); bgctx.fill();
+      bgctx.restore();
+    }
+    requestAnimationFrame(bgTick);
+  }
+  bgTick();
+  function bgExplode(x,y,col){
+    const n=reduce?20:40;
+    for(let i=0;i<n;i++){
+      const a=(Math.PI*2*i/n)+Math.random()*0.2, sp=(3+Math.random()*6)*dpr;
+      bgParts.push({x:x*dpr,y:y*dpr,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+        g:0.06*dpr, s:(2.6+Math.random()*2.6)*dpr, c:(Math.random()<0.2?'#ffffff':col),
+        life:1, fade:0.012+Math.random()*0.01, drag:0.92});
+    }
+    bgParts.push({x:x*dpr,y:y*dpr,vx:0,vy:0,g:0,s:13*dpr,c:'#fff',life:1,fade:0.07,drag:1}); // flash
+  }
+  function rocket(){
+    const x=innerWidth*(0.16+Math.random()*0.68);
+    const startY=innerHeight*0.99, apexY=innerHeight*(0.16+Math.random()*0.2);
+    const col=COLORS[Math.random()*5|0];
+    const climb=reduce?300:740, steps=18;
+    for(let s=0;s<=steps;s++){
+      setTimeout(()=>{
+        const pr=s/steps, y=startY+(apexY-startY)*pr;
+        for(let t=0;t<2;t++)                     // a tight cluster of pixels climbing, trailing sparks
+          bgParts.push({x:(x+(Math.random()-.5)*5)*dpr, y:y*dpr, vx:(Math.random()-.5)*0.5*dpr,
+            vy:(0.7+Math.random()*0.9)*dpr, g:0.03*dpr, s:(2+Math.random()*1.6)*dpr, c:col,
+            life:1, fade:0.06, drag:0.95});
+      }, climb*s/steps);
+    }
+    setTimeout(()=>{ bgExplode(x,apexY,col); bgExplode(x+(Math.random()-.5)*14, apexY-8, col); }, climb);
+  }
+  function rocketVolley(count, gap){ for(let i=0;i<count;i++) setTimeout(rocket, i*(gap||650)); }
+
+  /* ---------------- Balloons ---------------- */
+  const balloonBox = document.getElementById('balloons');
+  function floatBalloon(){
+    const b=document.createElement('div');
+    b.className='balloon';
+    const c=COLORS[Math.random()*5|0];
+    const size=46+Math.random()*34;
+    const left=Math.random()*90+2;
+    const dur=(reduce?6:9)+Math.random()*6;
+    const dx=((Math.random()-.5)*120).toFixed(0)+'px';
+    b.style.cssText=`left:${left}%;width:${size}px;height:${size*1.2}px;--dur:${dur}s;--dx:${dx};--bc:${c};`;
+    b.innerHTML='<div class="body"></div><div class="string"></div>';
+    balloonBox.appendChild(b);
+    setTimeout(()=>b.remove(), dur*1000);
+  }
+  function balloonWave(n){ for(let i=0;i<n;i++) setTimeout(floatBalloon, i*180); }
+
+  /* ---------------- Ambient floaties (message stage) ---------------- */
+  const amb=document.getElementById('ambient'); let ambOn=false;
+  const SHAPES=['🤍','✨','💖','⭐','🩵'];
+  function ambientFloat(){
+    if(!ambOn) return;
+    const e=document.createElement('div');
+    e.className='floaty';
+    e.textContent=SHAPES[Math.random()*SHAPES.length|0];
+    const size=14+Math.random()*22, left=Math.random()*100, dur=(reduce?7:11)+Math.random()*7;
+    const rot=((Math.random()-.5)*120).toFixed(0)+'deg';
+    e.style.cssText=`left:${left}%;font-size:${size}px;--dur:${dur}s;--rot:${rot};`;
+    amb.appendChild(e); setTimeout(()=>e.remove(),dur*1000);
+    setTimeout(ambientFloat, 380+Math.random()*420);
+  }
+
+  /* ---------------- Build cake candles + sprinkles ---------------- */
+  const cake=document.getElementById('cakeArt');
+  const N_CANDLES=5;
+  const candleEls=[];
+  for(let i=0;i<N_CANDLES;i++){
+    const c=document.createElement('div');
+    c.className='candle';
+    const spread=58; // percent area
+    const pos=50 + (i-(N_CANDLES-1)/2)*(spread/(N_CANDLES-1));
+    c.style.left=pos+'%'; c.style.transform='translateX(-50%)';
+    c.innerHTML='<div class="wick"></div><div class="flame"></div><div class="smoke"></div>';
+    cake.appendChild(c); candleEls.push(c);
+    c.addEventListener('click', ()=>{           // secret: tap a flame → pew off, then it re-lights
+      if(blowStarted || c.classList.contains('out')) return;
+      pew(); popAt(c); c.classList.add('out'); unlockSecret('candle');
+      setTimeout(()=>{ if(!blowStarted) c.classList.remove('out'); }, 950);
+    });
+  }
+  // sprinkles on bottom tier
+  const bottom=cake.querySelector('.tier.bottom');
+  for(let i=0;i<14;i++){
+    const s=document.createElement('div'); s.className='sprinkle';
+    s.style.background=COLORS[i%5];
+    s.style.left=(8+Math.random()*84)+'%';
+    s.style.top=(30+Math.random()*55)+'%';
+    s.style.transform='rotate('+(Math.random()*180)+'deg)';
+    bottom.appendChild(s);
+  }
+  /* ---- drawable "icing" on the biggest (bottom) layer ---- */
+  const icing=document.createElement('canvas'); icing.id='icing';
+  bottom.appendChild(icing);
+  let ictx=null, idrawing=false, ilx=0, ily=0, istroke='#fff', iceDirty=false;
+  const ICING_COLORS=['#FF6F9C','#8B9DFF','#7EE8C2','#FFD66B','#ffffff','#FF8FB1'];
+  function sizeIcing(){
+    const D=dpr||Math.min(devicePixelRatio||1,2);
+    const w=Math.max(1,Math.round((bottom.offsetWidth||200)*D));
+    const h=Math.max(1,Math.round((bottom.offsetHeight||90)*D));
+    if(ictx && icing.width===w && icing.height===h) return;   // already correct → keep drawing
+    let prev=null;
+    if(ictx && iceDirty && icing.width>1 && icing.height>1){    // preserve existing doodle across a resize
+      prev=document.createElement('canvas'); prev.width=icing.width; prev.height=icing.height;
+      prev.getContext('2d').drawImage(icing,0,0);
+    }
+    icing.width=w; icing.height=h;
+    ictx=icing.getContext('2d'); ictx.lineCap='round'; ictx.lineJoin='round';
+    if(prev) ictx.drawImage(prev,0,0,w,h);
+    icing._D=D;
+  }
+  sizeIcing();
+  addEventListener('resize', sizeIcing);
+  addEventListener('orientationchange', ()=>setTimeout(sizeIcing,300));
+  function icePos(e){
+    const r=icing.getBoundingClientRect();
+    return { x:(e.clientX-r.left)/r.width*icing.width, y:(e.clientY-r.top)/r.height*icing.height };
+  }
+  function iceDot(p){ ictx.fillStyle=istroke; ictx.beginPath(); ictx.arc(p.x,p.y,3.6*icing._D,0,6.283); ictx.fill(); }
+  icing.addEventListener('pointerdown', e=>{
+    if(blowStarted) return;
+    idrawing=true; iceDirty=true; istroke=ICING_COLORS[Math.random()*ICING_COLORS.length|0];
+    const p=icePos(e); ilx=p.x; ily=p.y; iceDot(p);
+    try{ icing.setPointerCapture(e.pointerId); }catch(_){}
+    e.preventDefault();
+  });
+  icing.addEventListener('pointermove', e=>{
+    if(!idrawing||!ictx) return;
+    const p=icePos(e);
+    ictx.strokeStyle=istroke; ictx.lineWidth=7*icing._D;
+    ictx.beginPath(); ictx.moveTo(ilx,ily); ictx.lineTo(p.x,p.y); ictx.stroke();
+    ilx=p.x; ily=p.y; e.preventDefault();
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>icing.addEventListener(ev, ()=>{ idrawing=false; }));
+  function clearIcing(){ if(ictx) ictx.clearRect(0,0,icing.width,icing.height); iceDirty=false; }
+  /* ---------------- Stage management ---------------- */
+  const stages={gift:document.getElementById('s-gift'),cake:document.getElementById('s-cake'),msg:document.getElementById('s-msg')};
+  function go(name){ for(const k in stages) stages[k].classList.toggle('show', k===name); }
+
+  /* STAGE 1 -> 2 : open gift */
+  const WISH_PETS=['Moo','Mew','Honey','Buzz','Berry','Angel','Bunny','Sweetpea','Dovey','Love'];
+  function setWishTitle(){
+    document.getElementById('cake-name').textContent = WISH_PETS[Math.random()*WISH_PETS.length|0];
+  }
+  const giftBtn=document.getElementById('giftBtn');
+  let opened=false;
+  function openGift(){
+    if(opened) return; opened=true;
+    document.getElementById('giftArt').classList.add('opening');
+    boxOpen();   // cheerful chime on open (also unlocks audio on this tap)
+    startBGM();  // gentle background music begins on first interaction
+    const r=giftBtn.getBoundingClientRect();
+    burst(r.left+r.width/2, r.top+r.height/2, 140);
+    balloonWave(10);
+    setTimeout(()=>{ spawnKitties(document.getElementById('giftArt').getBoundingClientRect()); }, 320);
+    setTimeout(()=>{ setWishTitle(); go('cake'); sizeIcing(); }, 950);
+    setTimeout(()=>{ gatherAroundCake(); }, 1150);
+  }
+  giftBtn.addEventListener('click', openGift);
+
+  /* STAGE 2 : blow candles */
+  let sfxCtx=null;
+  const PITCH=1.5;   // kittens → higher "mew mew" pitch
+  function pew(){
+    try{
+      if(!sfxCtx) sfxCtx=new (window.AudioContext||window.webkitAudioContext)();
+      if(sfxCtx.state==='suspended') sfxCtx.resume();
+      const t=sfxCtx.currentTime;
+      const o=sfxCtx.createOscillator(), g=sfxCtx.createGain();
+      o.type='square';
+      o.frequency.setValueAtTime(1100, t);
+      o.frequency.exponentialRampToValueAtTime(170, t+0.16);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.22, t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+0.19);
+      o.connect(g); g.connect(sfxCtx.destination);
+      o.start(t); o.stop(t+0.2);
+    }catch(e){}
+  }
+  function boxOpen(){          // cheerful little "ta-daa" chime when the gift opens
+    try{
+      if(!sfxCtx) sfxCtx=new (window.AudioContext||window.webkitAudioContext)();
+      if(sfxCtx.state==='suspended') sfxCtx.resume();
+      const t0=sfxCtx.currentTime;
+      const notes=[523.25,659.25,783.99,1046.5];   // C E G C, bright & happy
+      notes.forEach((f,n)=>{
+        const t=t0+n*0.085;
+        const o=sfxCtx.createOscillator(), g=sfxCtx.createGain();
+        o.type='triangle'; o.frequency.value=f;
+        const o2=sfxCtx.createOscillator(), g2=sfxCtx.createGain();
+        o2.type='sine'; o2.frequency.value=f*2;     // shimmer partial
+        g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.2,t+0.012); g.gain.exponentialRampToValueAtTime(0.0001,t+0.34);
+        g2.gain.setValueAtTime(0.0001,t); g2.gain.exponentialRampToValueAtTime(0.07,t+0.01); g2.gain.exponentialRampToValueAtTime(0.0001,t+0.22);
+        o.connect(g); g.connect(sfxCtx.destination); o2.connect(g2); g2.connect(sfxCtx.destination);
+        o.start(t); o.stop(t+0.36); o2.start(t); o2.stop(t+0.24);
+      });
+      [1568,2093].forEach((f,n)=>{                   // final sparkle
+        const tt=t0+0.4+n*0.06;
+        const o=sfxCtx.createOscillator(), g=sfxCtx.createGain();
+        o.type='sine'; o.frequency.value=f;
+        g.gain.setValueAtTime(0.0001,tt); g.gain.exponentialRampToValueAtTime(0.11,tt+0.01); g.gain.exponentialRampToValueAtTime(0.0001,tt+0.3);
+        o.connect(g); g.connect(sfxCtx.destination); o.start(tt); o.stop(tt+0.32);
+      });
+    }catch(e){}
+  }
+  /* gentle looping background music (synth music-box) */
+  let bgmOn=false, bgmTimer=null, bgmGain=null, bgmMuted=false;
+  const BGM_VOL=0.085;
+  function startBGM(){
+    if(bgmOn) return; bgmOn=true;
+    try{
+      if(!sfxCtx) sfxCtx=new (window.AudioContext||window.webkitAudioContext)();
+      if(sfxCtx.state==='suspended') sfxCtx.resume();
+      bgmGain=sfxCtx.createGain(); bgmGain.gain.value=0.0001; bgmGain.connect(sfxCtx.destination);
+      bgmGain.gain.exponentialRampToValueAtTime(bgmMuted?0.0001:BGM_VOL, sfxCtx.currentTime+2.5);
+      const MEL=[[659.25,1],[783.99,1],[880,1],[783.99,1],[659.25,1],[587.33,1],[523.25,2],[0,1]]; // gentle C-pentatonic phrase
+      const beat=0.46; let i=0;
+      (function step(){
+        if(!bgmOn||!sfxCtx) return;
+        const e=MEL[i%MEL.length], f=e[0], dur=e[1]*beat, t=sfxCtx.currentTime;
+        if(f>0){
+          const o=sfxCtx.createOscillator(), g=sfxCtx.createGain();
+          o.type='sine'; o.frequency.value=f;
+          const o2=sfxCtx.createOscillator(), g2=sfxCtx.createGain(); o2.type='triangle'; o2.frequency.value=f*2;
+          g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.5,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+dur+0.5);
+          g2.gain.setValueAtTime(0.0001,t); g2.gain.exponentialRampToValueAtTime(0.12,t+0.02); g2.gain.exponentialRampToValueAtTime(0.0001,t+0.4);
+          o.connect(g); g.connect(bgmGain); o2.connect(g2); g2.connect(bgmGain);
+          o.start(t); o.stop(t+dur+0.55); o2.start(t); o2.stop(t+0.45);
+        }
+        if(i%MEL.length===0){          // soft bass root each loop for warmth
+          const b=sfxCtx.createOscillator(), bg=sfxCtx.createGain(); b.type='sine'; b.frequency.value=130.81;
+          bg.gain.setValueAtTime(0.0001,t); bg.gain.exponentialRampToValueAtTime(0.42,t+0.06); bg.gain.exponentialRampToValueAtTime(0.0001,t+MEL.length*beat);
+          b.connect(bg); bg.connect(bgmGain); b.start(t); b.stop(t+MEL.length*beat+0.1);
+        }
+        i++; bgmTimer=setTimeout(step, dur*1000);
+      })();
+    }catch(e){ bgmOn=false; }
+  }
+  function stopBGM(){
+    bgmOn=false; if(bgmTimer){ clearTimeout(bgmTimer); bgmTimer=null; }
+    if(bgmGain&&sfxCtx){ try{ bgmGain.gain.cancelScheduledValues(sfxCtx.currentTime); bgmGain.gain.setValueAtTime(Math.max(bgmGain.gain.value,0.0001),sfxCtx.currentTime); bgmGain.gain.exponentialRampToValueAtTime(0.0001, sfxCtx.currentTime+0.7); }catch(e){} }
+  }
+  const musicBtn=document.getElementById('musicBtn');
+  function toggleMusic(){
+    bgmMuted=!bgmMuted; musicBtn.textContent=bgmMuted?'🔇':'🔊';
+    if(!bgmMuted && !bgmOn){ startBGM(); return; }
+    if(bgmGain&&sfxCtx){ try{ bgmGain.gain.cancelScheduledValues(sfxCtx.currentTime); bgmGain.gain.setValueAtTime(Math.max(bgmGain.gain.value,0.0001),sfxCtx.currentTime); bgmGain.gain.exponentialRampToValueAtTime(bgmMuted?0.0001:BGM_VOL, sfxCtx.currentTime+0.4); }catch(e){} }
+  }
+  musicBtn.addEventListener('click', toggleMusic);
+  /* eight distinct meows */
+  const MEOWS=[
+    {f0:520,f1:760,f2:430,dur:0.45,type:'sawtooth',formant:900,q:6,vol:.22},
+    {f0:680,f1:1000,f2:600,dur:0.30,type:'sawtooth',formant:1300,q:7,vol:.18},
+    {f0:340,f1:520,f2:290,dur:0.60,type:'sawtooth',formant:680,q:5,vol:.24},
+    {f0:600,f1:900,f2:520,dur:0.38,type:'square',formant:1100,q:6,vol:.15},
+    {f0:470,f1:700,f2:520,dur:0.52,type:'triangle',formant:840,q:4,vol:.24},
+    {f0:760,f1:1080,f2:700,dur:0.26,type:'sawtooth',formant:1550,q:8,vol:.16},
+    {f0:410,f1:640,f2:350,dur:0.55,type:'sawtooth',formant:760,q:6,vol:.23},
+    {f0:560,f1:840,f2:500,dur:0.42,type:'triangle',formant:1000,q:5,vol:.21},
+  ];
+  function meow(o){
+    try{
+      if(!sfxCtx) sfxCtx=new (window.AudioContext||window.webkitAudioContext)();
+      if(sfxCtx.state==='suspended') sfxCtx.resume();
+      const t=sfxCtx.currentTime, dur=o.dur;
+      const f0=o.f0*PITCH, f1=o.f1*PITCH, f2=o.f2*PITCH;
+      const osc=sfxCtx.createOscillator(); osc.type=o.type;
+      osc.frequency.setValueAtTime(f0,t);
+      osc.frequency.exponentialRampToValueAtTime(f1, t+dur*0.28);
+      osc.frequency.exponentialRampToValueAtTime(f2, t+dur);
+      const lfo=sfxCtx.createOscillator(), lfoG=sfxCtx.createGain(); // vibrato → cat-like
+      lfo.frequency.value=18; lfoG.gain.value=f0*0.035; lfo.connect(lfoG); lfoG.connect(osc.frequency);
+      const bp=sfxCtx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=o.formant*PITCH; bp.Q.value=o.q;
+      const g=sfxCtx.createGain();
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(o.vol, t+0.04);
+      g.gain.setValueAtTime(o.vol, t+dur*0.55);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      osc.connect(bp); bp.connect(g); g.connect(sfxCtx.destination);
+      osc.start(t); lfo.start(t); osc.stop(t+dur+0.05); lfo.stop(t+dur+0.05);
+    }catch(e){}
+  }
+  function purr(){            // low rumbling motor with ~25Hz tremolo
+    try{
+      if(!sfxCtx) sfxCtx=new (window.AudioContext||window.webkitAudioContext)();
+      if(sfxCtx.state==='suspended') sfxCtx.resume();
+      const t=sfxCtx.currentTime, dur=1.5;
+      const osc=sfxCtx.createOscillator(); osc.type='sawtooth'; osc.frequency.value=55;
+      const lp=sfxCtx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=320;
+      const trem=sfxCtx.createOscillator(); trem.type='sine'; trem.frequency.value=25; // the "motor"
+      const tremG=sfxCtx.createGain(); tremG.gain.value=0.09;
+      const g=sfxCtx.createGain(); g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(0.12,t+0.12);
+      g.gain.setValueAtTime(0.12,t+dur-0.3);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      trem.connect(tremG); tremG.connect(g.gain);
+      osc.connect(lp); lp.connect(g); g.connect(sfxCtx.destination);
+      osc.start(t); trem.start(t); osc.stop(t+dur+0.05); trem.stop(t+dur+0.05);
+    }catch(e){}
+  }
+  function sparkleMeow(){     // the rare golden kitty: fancy meow + ascending chime
+    meow({f0:600,f1:1080,f2:720,dur:0.5,type:'sawtooth',formant:1300,q:7,vol:.2});
+    try{
+      if(!sfxCtx) return;
+      const t=sfxCtx.currentTime;
+      [1320,1760,2200].forEach((fr,n)=>{
+        const o=sfxCtx.createOscillator(), g=sfxCtx.createGain();
+        o.type='sine'; o.frequency.value=fr*PITCH;
+        const tt=t+0.12+n*0.09;
+        g.gain.setValueAtTime(0.0001,tt);
+        g.gain.exponentialRampToValueAtTime(0.16,tt+0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001,tt+0.22);
+        o.connect(g); g.connect(sfxCtx.destination); o.start(tt); o.stop(tt+0.24);
+      });
+    }catch(e){}
+  }
+  let done=false, kittiesSpawned=false, blowStarted=false;
+  let trickCandle=null, trickArmed=false, relighting=false, trickKitty=null;
+  function popAt(candle){
+    const f=candle.querySelector('.flame'); if(!f) return;
+    const r=f.getBoundingClientRect();
+    firework(r.left+r.width/2, r.top+r.height/2);
+  }
+
+  /* ---- playful pun messages, some keyed to the pet name ---- */
+  const PET_PUNS={
+    berry:["Love you berry much! 🍓","You're berry special and I'm berry lucky 🍓","Hope your day is berry, berry sweet 🍓"],
+    honey:["You're my honey — life's just sweeter with you 🍯","Bee mine forever, honey 🐝","Sending you a hive-five and all my love 🍯"],
+    mew:["Happy birthday to the only one for mew 🐱","I'm not kitten — you're purr-fect 🐾","You've gotta be kitten me, this cute again? 😻"],
+    moo:["Love you to the moo-n and back 🐮","You're un-moo-stake-ably the best 🐄","No bull — you're my favourite 🐮"],
+    bunny:["Some-bunny loves you very much! 🐰","Hope your birthday's extra hoppy 🐰","You make my heart hop, bunny 🐇"],
+    angel:["Happy birthday to my actual angel 😇","You're heaven-sent — have the loveliest day ☁️","Sending a halo of love your way 😇"],
+    dovey:["You're my lovey-dovey, today and always 🕊️","Still totally dove-struck over you 🕊️"],
+    sweetpea:["Sweetest birthday to the sweetest pea 🌸","Sweet as a pea and twice as cute 💚"],
+    love:["Happy birthday, love — you're simply the best 💛","All my love on your big day 💖"],
+  };
+  const GENERIC=[
+    "Wishing you all the best, {pet} — and then some! 🎁",
+    "Happy birthday, {pet}! Hope it's a piece of cake 🍰",
+    "You're the icing on my cake, {pet} 🧁",
+    "Have your cake and eat it too today, {pet} 🍰",
+    "Donut worry, be happy — it's your day, {pet}! 🍩",
+    "You + me = the sweetest combo, {pet} 💕",
+    "Have a fan-tastic birthday, {pet}! 🎉",
+    "Olive you lots, {pet} — happy birthday! 🫒",
+  ];
+  function pickMessage(){
+    const pets=Object.keys(PET_PUNS);
+    const pet=pets[Math.random()*pets.length|0];
+    const pool=PET_PUNS[pet].concat(GENERIC.map(s=>s.replace('{pet}',pet)));
+    document.getElementById('msg-note').textContent=pool[Math.random()*pool.length|0];
+  }
+
+  function checkDone(){
+    if(!done && !relighting && candleEls.every(c=>c.classList.contains('out'))) finishCake();
+  }
+  function blowCandle(candle){
+    if(!candle) return;
+    if(candle.classList.contains('out')){ popAt(candle); pew(); return; } // already out → celebratory pop
+    popAt(candle); candle.classList.add('out'); pew(); rocket(); // a rocket climbs behind as it goes out
+    if(candle===trickCandle && trickArmed){     // the cheeky relighting candle
+      trickArmed=false; relighting=true;
+      setTimeout(()=>{
+        candle.classList.remove('out');         // it sneakily relights!
+        if(trickKitty){
+          trickKitty.classList.remove('startled'); void trickKitty.offsetWidth;
+          trickKitty.classList.add('startled'); showFloat(trickKitty,'❗');
+          setTimeout(()=>trickKitty.classList.remove('startled'), 600);
+        }
+        setTimeout(()=>{
+          candle.classList.add('out'); popAt(candle); pew(); // re-blow, for good this time
+          relighting=false; checkDone();
+        }, 950);
+      }, 650);
+    } else {
+      checkDone();
+    }
+  }
+  function finishCake(){
+    if(done) return; done=true;
+    document.getElementById('cakeHint').textContent='your wish is on its way ✨';
+    const r=cake.getBoundingClientRect();
+    burst(r.left+r.width/2, r.top+r.height*0.2, 180);
+    balloonWave(14);
+    rocketVolley(reduce?2:5, 480);            // grand finale behind the scene
+    setTimeout(()=>{ pickMessage(); go('msg'); ambOn=true; ambientFloat(); burst(innerWidth/2, innerHeight*0.4, 120); scatterKitties(); }, 1100);
+  }
+
+  /* ---- kitty stickers (hand-drawn SVG) ---- */
+  const blowBtn=document.getElementById('blowBtn');
+  const kittyBox=document.getElementById('kitties');
+  const FUR=['#F7A65A','#B9C0CC','#F3E3C8','#C58A5B','#FFB3C7','#6A6480','#8FD0C4','#E8A0B8'];
+  const HAT=['#FF6F9C','#8B9DFF','#7EE8C2','#FFD66B','#FF8FB1','#9B8CFF','#6FE3C8','#FFC24D'];
+  function kittySVG(i, golden){
+    const fur=golden?'#FFD34D':FUR[i%FUR.length], id='kf'+i;
+    let s='<svg viewBox="0 0 100 100">'
+      +'<defs><filter id="'+id+'" x="-30%" y="-30%" width="160%" height="160%">'
+        +'<feMorphology in="SourceAlpha" operator="dilate" radius="3.5" result="o"/>'
+        +'<feFlood flood-color="#ffffff" result="w"/>'
+        +'<feComposite in="w" in2="o" operator="in" result="b"/>'
+        +'<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>'
+      +'</filter></defs>'
+      +'<g filter="url(#'+id+')">'                                  /* silhouette = white sticker border */
+        +'<path d="M22 42 L17 11 L45 31 Z" fill="'+fur+'"/>'
+        +'<path d="M78 42 L83 11 L55 31 Z" fill="'+fur+'"/>'
+        +'<ellipse cx="50" cy="59" rx="34" ry="30" fill="'+fur+'"/>'
+      +'</g>'
+      +'<path d="M26 35 L24 20 L41 30 Z" fill="#FF9BB3"/>'           /* inner ears + face, on top */
+      +'<path d="M74 35 L76 20 L59 30 Z" fill="#FF9BB3"/>'
+      +'<ellipse cx="33" cy="66" rx="7" ry="4.5" fill="#FF6F9C" opacity=".5"/>'
+      +'<ellipse cx="67" cy="66" rx="7" ry="4.5" fill="#FF6F9C" opacity=".5"/>'
+      +'<g class="eo">'                                             /* open eyes */
+        +'<ellipse cx="39" cy="56" rx="4.6" ry="6.2" fill="#2c2238"/>'
+        +'<ellipse cx="61" cy="56" rx="4.6" ry="6.2" fill="#2c2238"/>'
+        +'<circle cx="41" cy="53" r="1.7" fill="#fff"/>'
+        +'<circle cx="63" cy="53" r="1.7" fill="#fff"/>'
+      +'</g>'
+      +'<g class="eh" display="none" stroke="#2c2238" stroke-width="2.4" fill="none" stroke-linecap="round">'  /* happy ^^ eyes */
+        +'<path d="M34 54 Q39 60 44 54"/>'
+        +'<path d="M56 54 Q61 60 66 54"/>'
+      +'</g>'
+      +'<path d="M47 62 h6 l-3 3 Z" fill="#FF6F9C"/>'
+      +'<path d="M50 65 q-4 4 -8 1 M50 65 q4 4 8 1" stroke="#2c2238" stroke-width="1.6" fill="none" stroke-linecap="round"/>'
+      +'<g stroke="#2c2238" stroke-width="1.1" opacity=".4" stroke-linecap="round">'
+        +'<line x1="13" y1="58" x2="29" y2="60"/><line x1="13" y1="64" x2="29" y2="64"/>'
+        +'<line x1="87" y1="58" x2="71" y2="60"/><line x1="87" y1="64" x2="71" y2="64"/>'
+      +'</g>'
+      +'<g transform="rotate(-9 50 30)" paint-order="stroke" stroke="#fff" stroke-width="2" stroke-linejoin="round">'  /* party hat */
+        +'<path d="M50 5 L43 30 L57 30 Z" fill="'+HAT[i%HAT.length]+'"/>'
+        +'<circle cx="50" cy="5.5" r="3.1" fill="#fff" stroke="none"/>'
+        +'<circle cx="49" cy="22" r="1.4" fill="#fff" stroke="none"/>'
+        +'<circle cx="52" cy="15" r="1.2" fill="#fff" stroke="none"/>'
+      +'</g>';
+    if(golden){
+      const star='M0 -5 L1.4 -1.4 L5 0 L1.4 1.4 L0 5 L-1.4 1.4 L-5 0 L-1.4 -1.4 Z';
+      s+='<path transform="translate(50,38) scale(1.4)" fill="#FFB13C" d="'+star+'"/>'   /* forehead gem */
+        +'<g class="spk" fill="#FFF6C8">'
+          +'<path transform="translate(19,16) scale(1.1)" d="'+star+'"/>'
+          +'<path transform="translate(84,20) scale(.9)" d="'+star+'"/>'
+          +'<path transform="translate(88,58) scale(1.05)" d="'+star+'"/>'
+          +'<path transform="translate(14,56) scale(.8)" d="'+star+'"/>'
+        +'</g>';
+    }
+    return s+'</svg>';
+  }
+  function clearKitties(){ kittyBox.innerHTML=''; }
+  function showFloat(k,ch){
+    const p=document.createElement('div'); p.className='puff'; p.textContent=ch;
+    k.appendChild(p); requestAnimationFrame(()=>p.classList.add('go'));
+    setTimeout(()=>p.remove(), 760);
+  }
+  function showPuff(k){ showFloat(k,'💨'); }
+  function pop(k){      // bounce reaction that cleanly resets so it can re-trigger
+    if(!k) return;
+    k.classList.remove('boing'); void k.offsetWidth; k.classList.add('boing');
+    setTimeout(()=>k.classList.remove('boing'), 430);
+  }
+  const REACTS=['boing','rspin','rwobble','rhop','rflip','rwiggle'];
+  function react(k){    // a random cutesy animation on tap
+    if(!k) return;
+    REACTS.forEach(c=>k.classList.remove(c)); void k.offsetWidth;
+    k.classList.add(REACTS[Math.random()*REACTS.length|0]);
+    setTimeout(()=>REACTS.forEach(c=>k.classList.remove(c)), 720);
+  }
+
+  /* ---------------- Secrets scoreboard ---------------- */
+  const SECRETS=[
+    {key:'meow', ic:'😺'},
+    {key:'purr', ic:'🐾'},
+    {key:'candle', ic:'🕯️'},
+    {key:'gold', ic:'✨'},
+    {key:'song', ic:'🎶'},
+  ];
+  let found=new Set(), finaleDone=false;
+  const board=document.getElementById('board');
+  function renderBoard(){
+    board.innerHTML='';
+    const lab=document.createElement('span'); lab.className='blab'; lab.textContent='secrets'; board.appendChild(lab);
+    SECRETS.forEach(s=>{
+      const e=document.createElement('span'); e.className='ic'+(found.has(s.key)?' on':''); e.textContent=s.ic; e.dataset.k=s.key; board.appendChild(e);
+    });
+    const c=document.createElement('span'); c.className='cnt'; c.textContent=found.size+'/'+SECRETS.length; board.appendChild(c);
+  }
+  function unlockSecret(key){
+    if(finaleDone || found.has(key)) return;
+    if(!SECRETS.some(s=>s.key===key)) return;
+    found.add(key); renderBoard();
+    const el=board.querySelector('.ic[data-k="'+key+'"]'); if(el){ el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); }
+    if(found.size>=SECRETS.length) setTimeout(grandFinale, 500);
+  }
+  renderBoard();
+
+  /* ---------------- Grand finale: heart → infinity → matrix ---------------- */
+  function grandFinale(){
+    if(finaleDone) return; finaleDone=true;
+    stopBGM();   // hand the soundtrack over to the song
+    burst(innerWidth/2, innerHeight*0.4, 200); rocketVolley(reduce?2:4, 380);
+    const ov=document.createElement('div'); ov.id='finale'; document.body.appendChild(ov);
+    requestAnimationFrame(()=>ov.style.background='rgba(6,3,12,0.94)');
+    const heart=document.createElement('div'); heart.className='bigheart';
+    heart.innerHTML='<svg viewBox="0 0 100 90" width="100%" height="100%"><defs><radialGradient id="hg" cx="40%" cy="35%"><stop offset="0%" stop-color="#FFB3CF"/><stop offset="55%" stop-color="#FF6F9C"/><stop offset="100%" stop-color="#E03A77"/></radialGradient></defs><path fill="url(#hg)" d="M50 86 C12 58 4 36 18 22 C30 10 46 16 50 30 C54 16 70 10 82 22 C96 36 88 58 50 86 Z"/></svg>';
+    ov.appendChild(heart);
+    setTimeout(()=>heart.classList.add('toInfinity'), 1900);
+    const inf=document.createElement('div'); inf.className='inf'; inf.textContent='∞'; ov.appendChild(inf);
+    setTimeout(()=>inf.classList.add('show'), 2700);
+    setTimeout(()=>startMatrix(ov), 3200);
+  }
+  function startMatrix(ov){
+    const c=document.createElement('canvas'); c.style.cssText='position:absolute;inset:0;width:100%;height:100%;';
+    ov.insertBefore(c, ov.firstChild);
+    const mx=c.getContext('2d');
+    function size(){ c.width=innerWidth*dpr; c.height=innerHeight*dpr; }
+    size(); addEventListener('resize', size);
+    const fs=Math.max(12,Math.round(15*dpr));
+    let cols=Math.floor(c.width/fs);
+    let drops=new Array(cols).fill(0).map(()=>Math.random()*c.height/fs);
+    const glyphs='アイウエオカキクケコサシスセソナニヌネノﾊﾋﾌﾍﾎ0123456789∞♥ABCDEFGHIJ';
+    let last=0;
+    function draw(ts){
+      requestAnimationFrame(draw);
+      if(ts-last < 95) return;          // ~10 updates/sec → gentler, slower flow
+      last=ts;
+      mx.fillStyle='rgba(0,0,0,0.10)'; mx.fillRect(0,0,c.width,c.height);
+      mx.font=fs+'px monospace';
+      for(let i=0;i<cols;i++){
+        const ch=glyphs[Math.random()*glyphs.length|0];
+        mx.fillStyle = Math.random()<0.04 ? '#d8ffe6' : '#39ff77';
+        mx.fillText(ch, i*fs, drops[i]*fs);
+        if(drops[i]*fs>c.height && Math.random()>0.975) drops[i]=0;
+        drops[i]++;
+      }
+    }
+    requestAnimationFrame(draw);
+    const yt=document.createElement('div'); yt.className='ytwrap';
+    yt.innerHTML='<iframe src="https://open.spotify.com/embed/playlist/6GL1l7RsXnqrsY8avrY5eE?utm_source=generator&theme=0&autoplay=1" title="reward playlist" allow="autoplay; encrypted-media; clipboard-write; fullscreen; picture-in-picture" loading="lazy"></iframe>';
+    ov.appendChild(yt);
+    const link=document.createElement('a'); link.className='ytlink'; link.href='https://open.spotify.com/playlist/6GL1l7RsXnqrsY8avrY5eE'; link.target='_blank'; link.rel='noopener';
+    link.textContent='♫ open the playlist in Spotify ↗';
+    ov.appendChild(link);
+    const m=document.createElement('div'); m.className='mtext'; m.innerHTML='✦ all secrets unlocked ✦<br>happy birthday 🐾';
+    ov.appendChild(m); setTimeout(()=>m.classList.add('show'), 700);
+    const again=document.createElement('button'); again.className='again'; again.textContent='↺ start over';
+    again.addEventListener('click', ()=>location.reload());
+    ov.appendChild(again);
+  }
+
+  /* --- easter egg: sing Happy Birthday once every kitty has been tapped at least once --- */
+  let chorusTaps=new Set();
+  function registerChorusTap(id){
+    chorusTaps.add(id);
+    if(chorusTaps.size>=8){ chorusTaps=new Set(); doChorus(); }
+  }
+  function sungMeowAt(at, note, dur){     // a meow pitched to a musical note
+    try{
+      if(!sfxCtx) return;
+      const freq=note*PITCH;
+      const osc=sfxCtx.createOscillator(); osc.type='sawtooth';
+      osc.frequency.setValueAtTime(freq*0.97, at);
+      osc.frequency.exponentialRampToValueAtTime(freq*1.05, at+dur*0.22);
+      osc.frequency.exponentialRampToValueAtTime(freq*0.99, at+dur);
+      const lfo=sfxCtx.createOscillator(), lfoG=sfxCtx.createGain();
+      lfo.frequency.value=18; lfoG.gain.value=freq*0.02; lfo.connect(lfoG); lfoG.connect(osc.frequency);
+      const bp=sfxCtx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=freq*2.3; bp.Q.value=5;
+      const g=sfxCtx.createGain();
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.exponentialRampToValueAtTime(0.2, at+0.03);
+      g.gain.setValueAtTime(0.2, at+dur*0.6);
+      g.gain.exponentialRampToValueAtTime(0.0001, at+dur);
+      osc.connect(bp); bp.connect(g); g.connect(sfxCtx.destination);
+      osc.start(at); lfo.start(at); osc.stop(at+dur+0.05); lfo.stop(at+dur+0.05);
+    }catch(e){}
+  }
+  function doChorus(){
+    unlockSecret('song');
+    try{ if(!sfxCtx) sfxCtx=new (window.AudioContext||window.webkitAudioContext)();
+      if(sfxCtx.state==='suspended') sfxCtx.resume(); }catch(e){}
+    const kids=[...kittyBox.children];
+    const G=392.0, A=440.0, B=493.88, C=523.25;     // "Hap-py Birth-day to You"
+    const line=[[G,0.32],[G,0.22],[A,0.42],[G,0.42],[C,0.42],[B,0.62]];
+    const base=(sfxCtx?sfxCtx.currentTime:0)+0.06;
+    let off=0, ni=0;
+    for(let rep=0; rep<3; rep++){
+      for(let j=0;j<line.length;j++){
+        const f=line[j][0], d=line[j][1];
+        sungMeowAt(base+off, f, d);
+        const k=kids[ni%kids.length], delayMs=off*1000;
+        setTimeout(()=>{
+          if(!k) return;
+          pop(k);
+          const r=k.getBoundingClientRect(); firework(r.left+r.width/2, r.top+r.height/2);
+        }, delayMs);
+        off+=d+0.06; ni++;
+      }
+      off+=0.34;                                      // breath between repeats
+    }
+    setTimeout(()=>{ burst(innerWidth/2, innerHeight*0.4, 220); balloonWave(10); }, off*1000+150);
+  }
+
+  function wireKitty(k){
+    if(k._wired) return; k._wired=true;
+    const id=+k.dataset.i, v=id%MEOWS.length, isGold=k.dataset.golden==='1';
+    let pressTimer=null, purred=false;
+    const startPress=()=>{ purred=false; pressTimer=setTimeout(()=>{   // long-press → purr
+      purred=true; purr(); k.classList.add('purr'); showFloat(k,'💗'); unlockSecret('purr');
+      setTimeout(()=>k.classList.remove('purr'), 1500);
+    }, 420); };
+    const endPress=()=>{ if(pressTimer){ clearTimeout(pressTimer); pressTimer=null; } };
+    k.addEventListener('pointerdown', startPress);
+    k.addEventListener('pointerup', endPress);
+    k.addEventListener('pointercancel', endPress);
+    k.addEventListener('pointerleave', endPress);
+    k.addEventListener('click', ()=>{
+      if(purred){ purred=false; return; }              // that was a pet, not a tap
+      isGold?sparkleMeow():meow(MEOWS[v]);
+      react(k);
+      unlockSecret('meow'); if(isGold){ unlockSecret('gold'); shootingStar(); }
+      registerChorusTap(id);
+    });
+  }
+  // scatter to screen edges (kept clear of the centre card + buttons)
+  const SCATTER=[[12,15],[50,8],[88,15],[7,42],[93,42],[14,78],[88,80],[50,86]];
+  function scatterKitties(){
+    [...kittyBox.children].forEach((k,idx)=>{
+      const p=SCATTER[idx%SCATTER.length];
+      const jx=(Math.random()-.5)*7, jy=(Math.random()-.5)*7;
+      k.style.left=(p[0]+jx)+'vw'; k.style.top=(p[1]+jy)+'vh';
+      k.classList.add('play'); wireKitty(k);
+    });
+  }
+  /* --- kitties emerge from the gift, gather around the cake, then blow --- */
+  const KN=8;
+  let goldenIdx=-1;
+  function spawnKitties(originRect){
+    if(kittiesSpawned) return; kittiesSpawned=true;
+    goldenIdx = Math.random()*KN|0;   // one golden kitty each round (a findable secret)
+    const ox=originRect.left+originRect.width/2, oy=originRect.top+originRect.height/2;
+    for(let i=0;i<KN;i++){
+      const isGold=(i===goldenIdx);
+      const k=document.createElement('div'); k.className='kitty'+(isGold?' golden':'');
+      k.dataset.i=i; if(isGold) k.dataset.golden='1';
+      k.innerHTML='<span class="face">'+kittySVG(i,isGold)+'</span>';
+      k.style.left=ox+'px'; k.style.top=oy+'px'; k.style.opacity='0';
+      kittyBox.appendChild(k);
+      const ang=(Math.PI*2*i/KN)+Math.random()*0.4, dist=40+Math.random()*46;
+      const tx=ox+Math.cos(ang)*dist, ty=oy+Math.sin(ang)*dist-10;
+      const delay=120+i*70;
+      setTimeout(()=>{
+        k.classList.add('emerge'); setTimeout(()=>k.classList.remove('emerge'),520);
+        k.style.opacity='1'; k.style.left=tx+'px'; k.style.top=ty+'px';
+        showFloat(k,'🎉');
+      }, delay);
+    }
+  }
+  // flank the cake on the left & right (clear of the centre candles + button)
+  const GATHER=[[-1.05,-0.30],[1.05,-0.30],[-0.92,0.10],[0.92,0.10],[-0.80,0.48],[0.80,0.48],[-1.02,0.70],[1.02,0.70]];
+  function gatherAroundCake(){
+    const r=cake.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+    [...kittyBox.children].forEach((k,i)=>{
+      const g=GATHER[i%GATHER.length];
+      k.style.left=(cx+g[0]*r.width*0.62)+'px';
+      k.style.top=(cy+g[1]*r.height)+'px';
+      k.classList.add('play'); wireKitty(k);   // tap them while they wait by the cake
+    });
+    document.getElementById('cakeHint').textContent='pet the kittens… then tap to make a wish 🐾';
+  }
+  function sendKittiesToBlow(){
+    if(blowStarted||!kittiesSpawned) return; blowStarted=true;
+    pew(); // unlock audio on the tap
+    blowBtn.disabled=true; blowBtn.style.opacity='.55'; blowBtn.style.cursor='default';
+    document.getElementById('cakeHint').textContent='make a wish… 🐾';
+    [...kittyBox.children].forEach(k=>k.classList.remove('play'));  // hands off while they work
+    rocketVolley(reduce?2:5, 540);            // fireworks shoot up behind the cake
+    const targets=candleEls.map(c=>{ const r=c.querySelector('.flame').getBoundingClientRect(); return {x:r.left+r.width/2, y:r.top+r.height/2}; });
+    const trickIdx=3+(Math.random()<0.5?0:1);        // candle 3 or 4 → handled by exactly one kitty
+    trickCandle=candleEls[trickIdx]; trickArmed=true; trickKitty=null;
+    [...kittyBox.children].forEach((k,i)=>{
+      const assigned=i%N_CANDLES;            // every kitty goes to a REAL candle
+      if(assigned===trickIdx && !trickKitty) trickKitty=k;
+      const tgt=targets[assigned], jitter=(Math.random()-0.5)*30, moveAt=i*190;  // slower, one by one
+      setTimeout(()=>{
+        k.style.left=(tgt.x+jitter)+'px';
+        k.style.top=(tgt.y+62)+'px';          // sit lower so they never cover the flames
+      }, moveAt);
+      setTimeout(()=>{ showPuff(k); blowCandle(candleEls[assigned]); }, moveAt+1200); // after the glide
+    });
+  }
+  blowBtn.addEventListener('click', sendKittiesToBlow);
+
+  /* STAGE 3 : buttons */
+  document.getElementById('moreConfetti').addEventListener('click', ()=>{
+    burst(innerWidth*0.5, innerHeight*0.35, 160); balloonWave(8);
+  });
+  document.getElementById('replay').addEventListener('click', ()=>{
+    opened=false; done=false; ambOn=false; kittiesSpawned=false; blowStarted=false; goldenIdx=-1;
+    found=new Set(); renderBoard();
+    trickCandle=null; trickArmed=false; relighting=false; trickKitty=null;
+    chorusTaps=new Set();
+    candleEls.forEach(c=>c.classList.remove('out'));
+    clearIcing();
+    document.getElementById('giftArt').classList.remove('opening');
+    document.getElementById('cakeHint').textContent='make a wish — tap when ready 🐾';
+    blowBtn.disabled=false; blowBtn.style.opacity=''; blowBtn.style.cursor='';
+    clearKitties();
+    go('gift');
+  });
+
+  /* gentle ambient confetti shower while idle on first stage */
+  let showerTimer=setInterval(()=>{ if(stages.gift.classList.contains('show') && parts.length<60) shower(); }, 600);
+
+  // little welcome burst
+  setTimeout(()=>burst(innerWidth/2, innerHeight*0.35, 60), 400);
+})();
+</script>
+</body>
+</html>
